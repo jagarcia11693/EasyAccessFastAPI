@@ -60,4 +60,4 @@ jobs:
         with:
           app-name: 'EasyAccessApi'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_06FE5C98116C492AA6C4AD3B8DDD7810 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_42FD71725B284A6ABCB60B2CEB3D6723 }}
