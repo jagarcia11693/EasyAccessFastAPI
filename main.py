@@ -1,8 +1,21 @@
 from fastapi import FastAPI
 from typing import Optional
+import json
 from pydantic import BaseModel,EmailStr,constr
 
 app = FastAPI()
+
+lstPersons= list()
+
+def registerPerson(self):
+    aperson = (self.name,self.personal_id,self.jobtitle,self.mail,self.department_id,self.country,self.manager_mail,self.account_type)
+    lstPersons.append(aperson)
+    
+def filter_value( someList, value ):
+    for x in someList:
+        if x == value :
+            yield x
+
 
 class Email(BaseModel):
     email: EmailStr
@@ -27,7 +40,7 @@ class Person(BaseModel):
                 "jobtitle": "IT Analyst",
                 "mobile": "3046387028",
                 "mail": "gaton11693@gmail.com",
-                "department":"5",
+                "department_id":"5",
                 "country":"CO",
                 "manager_mail":"jefe@gmail.com",
                 "account_type":"normal"
@@ -43,13 +56,22 @@ async def root():
 
 async def person(person:Person):
      
+    registerPerson(person)
+    print(lstPersons)
     results = {"person": person,"status":"created"}
     
     return results
 
-@app.get("/api/v1/person/read/")
+@app.get("/api/v1/person/read")
 
 async def personRead(email:Email):
-     
-    results = {"person": person,"status":"Exists"}
+    print(email.email)
+    
+    output= [item for item in lstPersons
+          if item[3] == email.email]
+    
+    readedPerson=json.dumps(output)
+    
+    results = {"person": readedPerson,"status":"Exists"}
+   
     return results
