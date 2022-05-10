@@ -1,4 +1,5 @@
 uvloop==0.16.0
+email-validator=1.2.1
 asyncpg==0.21.0
 click==7.1.2
 databases==0.4.1
