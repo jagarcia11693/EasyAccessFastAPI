@@ -70,8 +70,13 @@ async def personRead(email:Email):
     output= [item for item in lstPersons
           if item[3] == email.email]
     
+    
     readedPerson=json.dumps(output)
     
-    results = {"person": readedPerson,"status":"Exists"}
+    
+    if output:
+        results = {"person": readedPerson,"status":"It exists"}
+    else:
+        results = {"person": readedPerson,"status":"It doesn't exist"}
    
     return results
