@@ -1,11 +1,17 @@
 from fastapi import FastAPI
+import os
 from typing import Optional
 import json
+import requests
 from pydantic import BaseModel,EmailStr,constr
+import random
+
 
 app = FastAPI()
 
 lstPersons= list()
+
+smsFunctionUri=os.environ.get('SMS_FUNCTION_URI')
 
 def registerPerson(self):
     aperson = (self.name,self.personal_id,self.jobtitle,self.mail,self.department_id,self.country,self.manager_mail,self.account_type)
@@ -49,7 +55,7 @@ class Person(BaseModel):
 
 @app.get("/")
 async def root():
-    return {"message": "Hello World"}
+    return {"message": "Hola, esta es una appservice en Azure"}
 
 
 @app.post("/api/v1/person/create")
@@ -57,8 +63,14 @@ async def root():
 async def person(person:Person):
      
     registerPerson(person)
-    print(lstPersons)
-    results = {"person": person,"status":"created"}
+    
+    n = (random.randint(30,99)) **3
+    
+    messageapi="Bienvenido!! Su codigo de Verificacion es "+str(n)
+    data = {'mobile':str(person.mobile),"message":messageapi}
+    headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
+    r = requests.post(smsFunctionUri, data=json.dumps(data), headers=headers)
+    results = {"person": person,"status":"created, sms code has been sent"}
     
     return results
 
@@ -80,3 +92,4 @@ async def personRead(email:Email):
         results = {"person": readedPerson,"status":"It doesn't exist"}
    
     return results
+
